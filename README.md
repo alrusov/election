@@ -1,11 +1,10 @@
 # election
 
-![Go](https://img.shields.io/badge/go-1.20+-blue.svg)
-![Redis](https://img.shields.io/badge/redis-supported-red.svg)
-![License](https://img.shields.io/badge/license-MIT-green.svg)
-![Status](https://img.shields.io/badge/status-production--ready-brightgreen.svg)
+[![Go](https://img.shields.io/badge/go-1.20+-blue.svg)]()
+[![License](https://img.shields.io/badge/license-MIT-green.svg)]()
+[![Redis](https://img.shields.io/badge/redis-supported-red.svg)]()
 
-Production-ready leader election library for Go using Redis (Standalone / Sentinel / Cluster).
+Leader election library for Go using Redis (Standalone / Sentinel / Cluster).
 
 The library allows multiple equal nodes to elect a master for independent resources with:
 heartbeat, TTL-based failover, fencing token (split-brain protection), forced re-election, graceful resign, jittered heartbeat and callbacks.
