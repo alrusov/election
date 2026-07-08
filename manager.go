@@ -12,11 +12,11 @@ func init() {
 }
 
 type Manager struct {
+	sync.Mutex
 	cfg       Config
 	storage   Storage
 	callbacks Callbacks
 
-	mu      sync.Mutex
 	masters map[string]bool
 	tokens  map[string]int64
 	cancel  map[string]context.CancelFunc
@@ -37,14 +37,14 @@ func NewManager(cfg Config, storage Storage, cb Callbacks) *Manager {
 }
 
 func (m *Manager) Start(ctx context.Context, resource string) {
-	m.mu.Lock()
+	m.Lock()
 	if _, ok := m.cancel[resource]; ok {
-		m.mu.Unlock()
+		m.Unlock()
 		return
 	}
 	cctx, cancel := context.WithCancel(ctx)
 	m.cancel[resource] = cancel
-	m.mu.Unlock()
+	m.Unlock()
 
 	go m.loop(cctx, resource)
 }
@@ -84,8 +84,8 @@ func (m *Manager) tick(resource string) {
 		return
 	}
 
-	m.mu.Lock()
-	defer m.mu.Unlock()
+	m.Lock()
+	defer m.Unlock()
 
 	prev := m.masters[resource]
 
@@ -106,14 +106,14 @@ func (m *Manager) tick(resource string) {
 }
 
 func (m *Manager) IsMaster(resource string) bool {
-	m.mu.Lock()
-	defer m.mu.Unlock()
+	m.Lock()
+	defer m.Unlock()
 	return m.masters[resource]
 }
 
 func (m *Manager) Token(resource string) int64 {
-	m.mu.Lock()
-	defer m.mu.Unlock()
+	m.Lock()
+	defer m.Unlock()
 	return m.tokens[resource]
 }
 
@@ -126,12 +126,12 @@ func (m *Manager) ForceReelection(resource string) error {
 }
 
 func (m *Manager) Stop(resource string) {
-	m.mu.Lock()
+	m.Lock()
 	if cancel, ok := m.cancel[resource]; ok {
 		cancel()
 		delete(m.cancel, resource)
 		delete(m.masters, resource)
 		delete(m.tokens, resource)
 	}
-	m.mu.Unlock()
+	m.Unlock()
 }

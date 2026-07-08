@@ -8,10 +8,10 @@ import (
 )
 
 type RedisStorage struct {
-	rdb *redis.Client
+	rdb redis.UniversalClient
 }
 
-func NewRedisStorage(rdb *redis.Client) *RedisStorage {
+func NewRedisStorage(rdb redis.UniversalClient) *RedisStorage {
 	return &RedisStorage{rdb: rdb}
 }
 

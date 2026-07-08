@@ -28,9 +28,6 @@ func main() {
 			HeartbeatInterval: 2 * time.Second,
 			TTL:               6 * time.Second,
 			JitterPercent:     10,
-			EnableFencing:     true,
-			//RedisMode:         election.RedisSentinel,
-			RedisMode: election.RedisStandalone,
 		},
 		storage,
 		election.Callbacks{
